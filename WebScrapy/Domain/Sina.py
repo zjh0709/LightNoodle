@@ -19,7 +19,11 @@ class Sina(BaseDomain):
 
     def get_report_topic_by_page(self, page: Page):
         url_expr = re.compile("vip.stock.finance.sina.com.cn/q/go.php/vReport_Show/kind/search/rptid")
-        r = requests.get(page.url, headers=self.headers)
+        try:
+            r = requests.get(page.url, headers=self.headers, timeout=5)
+        except requests.exceptions.ConnectTimeout:
+            traceback.print_exc()
+            return [], []
         r.encoding = "gb2312"
         soup = BeautifulSoup(r.text, "html.parser")
         links = soup.find_all("a", href=url_expr)
@@ -42,7 +46,11 @@ class Sina(BaseDomain):
         return articles, pages
 
     def get_report_detail_by_url(self, url: str):
-        r = requests.get(url, headers=self.headers)
+        try:
+            r = requests.get(url, headers=self.headers, timeout=5)
+        except requests.exceptions.ConnectTimeout:
+            traceback.print_exc()
+            return {}
         r.encoding = "gb2312"
         attr = {}
         # noinspection PyBroadException

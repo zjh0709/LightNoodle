@@ -11,6 +11,10 @@ class Price(object):
         self.low = low
         self.volume = volume
 
+    @property
+    def properties(self):
+        return ["code", "date", "opening", "closing", "high", "low", "volume"]
+
     def to_dict(self):
-        attrs = ["code", "date", "opening", "closing", "high", "low", "volume"]
-        return {k: getattr(self, k) for k in attrs}
+        return {k: getattr(self, k) for k in self.properties
+                if getattr(self, k) is not None}

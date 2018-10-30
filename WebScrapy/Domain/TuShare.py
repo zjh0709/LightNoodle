@@ -40,3 +40,9 @@ class TuShare(BaseDomain):
 
     def get_current_trade_info(self):
         df = ts.get_today_all()
+        return []
+
+    @property
+    def stocks(self):
+        df = ts.get_stock_basics()
+        return list(df.index)

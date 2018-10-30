@@ -17,6 +17,10 @@ class Page(object):
                      domain=page.domain)
                 for i in range(min_page, max_page + 1)]
 
+    @property
+    def properties(self):
+        return ["url", "code", "category", "domain"]
+
     def to_dict(self):
-        attrs = ["url", "code", "category", "domain"]
-        return {k: getattr(self, k) for k in attrs}
+        return {k: getattr(self, k) for k in self.properties
+                if getattr(self, k) is not None}

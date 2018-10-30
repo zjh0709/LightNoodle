@@ -28,7 +28,11 @@ class Jrj(BaseDomain):
 
     def get_news_topic_by_page(self, page: Page):
         url_expr = re.compile("http://stock.jrj.com.cn/\d{4}/\d{2}/\d+.shtml")
-        r = requests.get(page.url)
+        try:
+            r = requests.get(page.url, timeout=5)
+        except requests.exceptions.ConnectTimeout:
+            traceback.print_exc()
+            return [], []
         r.encoding = "gbk"
         soup = BeautifulSoup(r.text, "html.parser")
         links = soup.find_all("a", href=url_expr)
@@ -47,7 +51,11 @@ class Jrj(BaseDomain):
         return articles, pages
 
     def get_news_detail_by_url(self, url: str):
-        r = requests.get(url)
+        try:
+            r = requests.get(url, timeout=5)
+        except requests.exceptions.ConnectTimeout:
+            traceback.print_exc()
+            return {}
         r.encoding = "gbk"
         attr = {}
         # noinspection PyBroadException
@@ -81,7 +89,11 @@ class Jrj(BaseDomain):
 
     def get_report_topic_by_page(self, page: Page):
         url_expr = re.compile("http://istock.jrj.com.cn/article,yanbao,\d+.html")
-        r = requests.get(page.url, headers=self.headers)
+        try:
+            r = requests.get(page.url, headers=self.headers, timeout=5)
+        except requests.exceptions.ConnectTimeout:
+            traceback.print_exc()
+            return [], []
         r.encoding = "gb2312"
         soup = BeautifulSoup(r.text, "html.parser")
         links = soup.find_all("a", href=url_expr)
@@ -103,7 +115,11 @@ class Jrj(BaseDomain):
         return articles, pages
 
     def get_report_detail_by_url(self, url: str):
-        r = requests.get(url, headers=self.headers)
+        try:
+            r = requests.get(url, headers=self.headers, timeout=5)
+        except requests.exceptions.ConnectTimeout:
+            traceback.print_exc()
+            return {}
         r.encoding = "gb2312"
         attr = {}
         # noinspection PyBroadException

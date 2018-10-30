@@ -22,7 +22,11 @@ class Article(object):
         self.category = category
         self.domain = domain
 
+    @property
+    def properties(self):
+        return ["url", "title", "content", "code", "public_date",
+                "author", "classify", "org", "category", "domain"]
+
     def to_dict(self):
-        attrs = ["url", "title", "content", "code", "public_date",
-                 "author", "classify", "org", "category", "domain"]
-        return {k: getattr(self, k) for k in attrs}
+        return {k: getattr(self, k) for k in self.properties
+                if getattr(self, k) is not None}

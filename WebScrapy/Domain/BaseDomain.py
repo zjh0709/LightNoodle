@@ -9,6 +9,7 @@ class BaseDomain(object):
         self.news_topic_wizard = str()
         self.news_content_wizard = str()
         self.domain_name = str()
+        self.max_page = 50
 
     @property
     def headers(self):
@@ -28,6 +29,8 @@ class BaseDomain(object):
     def get_report_topic_by_code(self, code: str) -> list:
         first_page = self.first_report_topic_url(code)
         articles, pages = self.get_report_topic_by_page(first_page)
+        if len(pages) >= self.max_page:
+            return []
         for page in pages:
             other_articles, _ = self.get_report_topic_by_page(page)
             articles.extend(other_articles)
@@ -85,3 +88,8 @@ class BaseDomain(object):
 
     def get_current_trade_info(self) -> list:
         pass
+
+    @property
+    def stocks(self) -> list:
+        pass
+

@@ -26,7 +26,11 @@ class EastMoney(BaseDomain):
 
     def get_report_topic_by_page(self, page: Page):
         articles, max_page = [], 1
-        r = requests.get(page.url, headers=self.headers)
+        try:
+            r = requests.get(page.url, headers=self.headers, timeout=5)
+        except requests.exceptions.ConnectTimeout:
+            traceback.print_exc()
+            return [], []
         r.encoding = "utf-8"
         try:
             data = json.loads("{"+r.text.strip().lstrip("(").rstrip(")")+"}")
@@ -49,7 +53,11 @@ class EastMoney(BaseDomain):
         return articles, pages
 
     def get_report_detail_by_url(self, url: str):
-        r = requests.get(url, headers=self.headers)
+        try:
+            r = requests.get(url, headers=self.headers, timeout=5)
+        except requests.exceptions.ConnectTimeout:
+            traceback.print_exc()
+            return {}
         r.encoding = "gb2312"
         attr = {}
         soup = BeautifulSoup(r.text, "html.parser")
