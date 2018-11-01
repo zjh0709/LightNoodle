@@ -12,7 +12,7 @@ class TuShare(BaseDomain):
         self.domain_name = "tushare"
 
     def get_prime_news_topic(self, page=None):
-        df = ts.get_latest_news(top=4000, show_content=False)
+        df = ts.get_latest_news(top=2000, show_content=False)
         if df is not None:
             articles = [Article(url=d.get("url"),
                                 title=d.get("title"),
