@@ -7,6 +7,12 @@ if __name__ == '__main__':
     if cmd is None:
         scrapy_job.save_tu_share_prime_news_topic()
     elif cmd == "topic":
+        scrapy_job.save_sina_report_topic(first_page=True)
+        scrapy_job.save_east_money_report_topic(first_page=True)
+        scrapy_job.save_jrj_news_topic(first_page=True)
+        scrapy_job.save_jrj_report_topic(first_page=True)
+        scrapy_job.save_tu_share_prime_news_topic()
+    elif cmd == "all":
         scrapy_job.save_sina_report_topic()
         scrapy_job.save_east_money_report_topic()
         scrapy_job.save_jrj_news_topic()

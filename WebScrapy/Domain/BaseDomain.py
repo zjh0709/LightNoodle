@@ -38,6 +38,11 @@ class BaseDomain(object):
             articles.extend(other_articles)
         return articles
 
+    def get_report_topic_by_code_first_page(self, code: str) -> list:
+        first_page = self.first_report_topic_url(code)
+        articles, _ = self.get_report_topic_by_page(first_page)
+        return articles
+
     def get_report_detail_by_url(self, url: str) -> dict:
         pass
 
@@ -62,6 +67,11 @@ class BaseDomain(object):
         for page in pages:
             other_articles, _ = self.get_news_topic_by_page(page)
             articles.extend(other_articles)
+        return articles
+
+    def get_news_topic_by_code_first_page(self, code: str) -> list:
+        first_page = self.first_news_topic_url(code)
+        articles, _ = self.get_news_topic_by_page(first_page)
         return articles
 
     def get_news_detail_by_url(self, url: str) -> dict:

@@ -79,21 +79,41 @@ class ScrapyJob(object):
         self.tu_share = TuShare()
         self.stocks = self.tu_share.stocks
 
-    def save_sina_report_topic(self):
+    def save_sina_report_topic(self, first_page: bool=False):
         with ThreadPoolExecutor(max_workers=4) as executor:
-            executor.map(partial(save_articles_by_func_and_code, self.sina.get_report_topic_by_code), self.stocks)
+            if first_page:
+                executor.map(partial(save_articles_by_func_and_code, self.sina.get_report_topic_by_code_first_page),
+                             self.stocks)
+            else:
+                executor.map(partial(save_articles_by_func_and_code, self.sina.get_report_topic_by_code),
+                             self.stocks)
 
-    def save_jrj_news_topic(self):
+    def save_jrj_news_topic(self, first_page: bool=False):
         with ThreadPoolExecutor(max_workers=4) as executor:
-            executor.map(partial(save_articles_by_func_and_code, self.jrj.get_news_topic_by_code), self.stocks)
+            if first_page:
+                executor.map(partial(save_articles_by_func_and_code, self.jrj.get_news_topic_by_code_first_page),
+                             self.stocks)
+            else:
+                executor.map(partial(save_articles_by_func_and_code, self.jrj.get_news_topic_by_code),
+                             self.stocks)
 
-    def save_jrj_report_topic(self):
+    def save_jrj_report_topic(self, first_page: bool=False):
         with ThreadPoolExecutor(max_workers=4) as executor:
-            executor.map(partial(save_articles_by_func_and_code, self.jrj.get_report_topic_by_code), self.stocks)
+            if first_page:
+                executor.map(partial(save_articles_by_func_and_code, self.jrj.get_report_topic_by_code_first_page),
+                             self.stocks)
+            else:
+                executor.map(partial(save_articles_by_func_and_code, self.jrj.get_report_topic_by_code),
+                             self.stocks)
 
-    def save_east_money_report_topic(self):
+    def save_east_money_report_topic(self, first_page: bool=False):
         with ThreadPoolExecutor(max_workers=4) as executor:
-            executor.map(partial(save_articles_by_func_and_code, self.east_money.get_report_topic_by_code), self.stocks)
+            if first_page:
+                executor.map(partial(save_articles_by_func_and_code, self.east_money.get_report_topic_by_code_first_page),
+                             self.stocks)
+            else:
+                executor.map(partial(save_articles_by_func_and_code, self.east_money.get_report_topic_by_code),
+                             self.stocks)
 
     def save_tu_share_prime_news_topic(self):
         save_articles_by_func(self.tu_share.get_prime_news_topic)
