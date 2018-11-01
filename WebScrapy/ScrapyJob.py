@@ -46,6 +46,30 @@ def save_articles_by_func(f):
     logging.info("end count {}".format(len(articles)))
 
 
+def save_content_by_funcs_and_articles(f_map={}, articles: list = []):
+    logging.info("start")
+    io = NoodleIO()
+
+    def save(article: Article):
+        logging.info(article.domain)
+        article = f_map.get("{}_{}".format(article.domain, article.category),
+                            lambda x: article)(article)
+        if article.content is not None:
+            io.save(table="article",
+                    data=article.to_dict(),
+                    spec_key=["url"])
+        else:
+            io.save(table="article",
+                    data=article.to_dict(),
+                    spec_key=["url"],
+                    update_columns=["url"])
+
+    with ThreadPoolExecutor(max_workers=4) as executor:
+        executor.map(save, articles).send(None)
+
+    logging.info("end count {}".format(len(articles)))
+
+
 class ScrapyJob(object):
 
     def __init__(self):
@@ -72,4 +96,17 @@ class ScrapyJob(object):
             executor.map(partial(save_articles_by_func_and_code, self.east_money.get_report_topic_by_code), self.stocks)
 
     def save_tu_share_prime_news_topic(self):
-        save_articles_by_func(self.tu_share.get_prime_news_topic())
+        save_articles_by_func(self.tu_share.get_prime_news_topic)
+
+    def save_content(self):
+        io = NoodleIO()
+        f_map = {
+            "{}_{}".format(self.sina.domain_name, self.sina.REPORT): self.sina.detail_report,
+            "{}_{}".format(self.jrj.domain_name, self.jrj.REPORT): self.jrj.detail_report,
+            "{}_{}".format(self.jrj.domain_name, self.sina.NEWS): self.jrj.detail_news,
+            "{}_{}".format(self.east_money.domain_name, self.east_money.REPORT): self.east_money.detail_report,
+            "{}_{}".format(self.tu_share.domain_name, self.tu_share.NEWS): self.tu_share.detail_news
+        }
+        data = io.load("article", limit=10, order_by={"timestamp": 1})
+        articles = [Article(**d) for d in data]
+        save_content_by_funcs_and_articles(f_map, articles)

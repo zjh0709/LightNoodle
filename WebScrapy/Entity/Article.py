@@ -10,7 +10,8 @@ class Article(object):
                  classify: str = None,
                  org: str = None,
                  category: str = None,
-                 domain: str = None):
+                 domain: str = None,
+                 **kwargs):
         self.url = url
         self.title = title
         self.content = content

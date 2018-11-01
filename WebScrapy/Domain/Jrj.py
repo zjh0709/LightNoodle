@@ -23,7 +23,7 @@ class Jrj(BaseDomain):
     def first_news_topic_url(self, code: str = None):
         return Page(url=self.news_topic_wizard.replace("_{}", "").format(code),
                     code=code,
-                    category="news",
+                    category=self.NEWS,
                     domain=self.domain_name)
 
     def get_news_topic_by_page(self, page: Page):
@@ -84,7 +84,7 @@ class Jrj(BaseDomain):
     def first_report_topic_url(self, code: str = None):
         return Page(url=self.report_topic_wizard.format(code, 1),
                     code=code,
-                    category="report",
+                    category=self.REPORT,
                     domain=self.domain_name)
 
     def get_report_topic_by_page(self, page: Page):

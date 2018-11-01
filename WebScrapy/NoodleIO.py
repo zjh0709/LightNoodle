@@ -27,4 +27,17 @@ class NoodleIO(object):
                                              upsert=True)
         return document
 
+    def load(self, table: str, spec: dict={}, find_columns: list=[],
+             limit: int=None, order_by: dict ={}):
+        columns = {c: 1 for c in find_columns}
+        columns.update({"_id": 0})
+        data = self.db.get_collection(table).find(spec, columns)
+        if order_by:
+            data = data.sort(list(order_by.items()))
+        if limit:
+            data = data.limit(limit)
+        return list(data)
+
+
+
 

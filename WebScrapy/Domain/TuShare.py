@@ -9,14 +9,20 @@ class TuShare(BaseDomain):
 
     def __init__(self):
         super().__init__()
+        self.domain_name = "tushare"
 
     def get_prime_news_topic(self, page=None):
-        df = ts.get_latest_news(top=1000, show_content=False)
-        articles = [Article(url=d.get("url"),
-                            title=d.get("title"),
-                            classify=d.get("classify"),
-                            public_date=d.get("time"))
-                    for d in df.to_dict(orient="records")]
+        df = ts.get_latest_news(top=4000, show_content=False)
+        if df is not None:
+            articles = [Article(url=d.get("url"),
+                                title=d.get("title"),
+                                classify=d.get("classify"),
+                                public_date=d.get("time"),
+                                category=self.NEWS,
+                                domain=self.domain_name)
+                        for d in df.to_dict(orient="records")]
+        else:
+            articles = []
         return articles
 
     def get_prime_news_detail_by_url(self, url: str):

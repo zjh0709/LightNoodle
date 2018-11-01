@@ -10,6 +10,8 @@ class BaseDomain(object):
         self.news_content_wizard = str()
         self.domain_name = str()
         self.max_page = 50
+        self.NEWS = "news"
+        self.REPORT = "report"
 
     @property
     def headers(self):
@@ -20,7 +22,7 @@ class BaseDomain(object):
     def first_report_topic_url(self, code: str = None):
         return Page(url=self.report_topic_wizard.format(code, 1),
                     code=code,
-                    category="report",
+                    category=self.REPORT,
                     domain=self.domain_name)
 
     def get_report_topic_by_page(self, page: Page) -> tuple:
@@ -48,7 +50,7 @@ class BaseDomain(object):
     def first_news_topic_url(self, code: str = None):
         return Page(url=self.news_topic_wizard.format(code, 1),
                     code=code,
-                    category="news",
+                    category=self.NEWS,
                     domain=self.domain_name)
 
     def get_news_topic_by_page(self, page: Page) -> tuple:
