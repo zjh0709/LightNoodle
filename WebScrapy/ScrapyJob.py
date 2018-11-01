@@ -24,7 +24,7 @@ def save_articles_by_func_and_code(f, code: str):
                 spec_key=["url"])
 
     with ThreadPoolExecutor(max_workers=4) as executor:
-        executor.map(save, articles).send(None)
+        executor.map(save, articles)
 
     logging.info("end {} count {}".format(code, len(articles)))
 
@@ -35,13 +35,13 @@ def save_articles_by_func(f):
     io = NoodleIO()
 
     def save(article: Article):
-        logging.info(article.code)
+        logging.info(article.url)
         io.save(table="article",
                 data=article.to_dict(),
                 spec_key=["url"])
 
     with ThreadPoolExecutor(max_workers=4) as executor:
-        executor.map(save, articles).send(None)
+        executor.map(save, articles)
 
     logging.info("end count {}".format(len(articles)))
 
@@ -65,7 +65,7 @@ def save_content_by_funcs_and_articles(f_map={}, articles: list = []):
                     update_columns=["url"])
 
     with ThreadPoolExecutor(max_workers=4) as executor:
-        executor.map(save, articles).send(None)
+        executor.map(save, articles)
 
     logging.info("end count {}".format(len(articles)))
 
@@ -107,6 +107,6 @@ class ScrapyJob(object):
             "{}_{}".format(self.east_money.domain_name, self.east_money.REPORT): self.east_money.detail_report,
             "{}_{}".format(self.tu_share.domain_name, self.tu_share.NEWS): self.tu_share.detail_news
         }
-        data = io.load("article", limit=10, order_by={"timestamp": 1})
+        data = io.load("article", limit=5000, order_by={"timestamp": 1})
         articles = [Article(**d) for d in data]
         save_content_by_funcs_and_articles(f_map, articles)

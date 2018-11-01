@@ -1,4 +1,5 @@
 import datetime
+import traceback
 
 import pymongo
 
@@ -17,15 +18,18 @@ class NoodleIO(object):
     def __del__(self):
         self.client.close()
 
+    # noinspection PyBroadException
     def save(self, table: str, data: dict, spec_key: list=[], update_columns: list=None) -> None:
-        timestamp = datetime.datetime.now().strftime("%Y-%m-%d %X")
-        spec = {k: data[k] for k in spec_key}
-        document = {k: data[k] for k in update_columns} if update_columns else data
-        document.setdefault("timestamp", timestamp)
-        self.db.get_collection(table).update(spec=spec,
-                                             document=document,
-                                             upsert=True)
-        return document
+        try:
+            timestamp = datetime.datetime.now().strftime("%Y-%m-%d %X")
+            spec = {k: data[k] for k in spec_key}
+            document = {k: data[k] for k in update_columns} if update_columns else data
+            document.setdefault("timestamp", timestamp)
+            self.db.get_collection(table).update(spec=spec,
+                                                 document=document,
+                                                 upsert=True)
+        except Exception as e:
+            traceback.print_exc()
 
     def load(self, table: str, spec: dict={}, find_columns: list=[],
              limit: int=None, order_by: dict ={}):
