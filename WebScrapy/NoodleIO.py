@@ -25,6 +25,7 @@ class NoodleIO(object):
             spec = {k: data[k] for k in spec_key}
             document = {k: data[k] for k in update_columns} if update_columns else data
             document.setdefault("timestamp", timestamp)
+            document = {"$set": document}
             self.db.get_collection(table).update(spec=spec,
                                                  document=document,
                                                  upsert=True)
